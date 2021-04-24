@@ -1,0 +1,8 @@
+---
+domain: "cluster"
+external_gateway_cidr: "192.168.50.150/24"
+internal_gateway_cidr: "192.168.100.1/24"
+external_gateway_ip: "{{ external_gateway_cidr | regex_replace('((?:[0-9]{1,3}\\.){3}[0-9]{1,3})(?:\\/[0-9]{1,2})+', '\\1' ) }}"
+internal_gateway_ip: "{{ internal_gateway_cidr | regex_replace('((?:[0-9]{1,3}\\.){3}[0-9]{1,3})(?:\\/[0-9]{1,2})+', '\\1' ) }}"
+consul_join_ips: ["{{ internal_gateway_ip }}"]
+...

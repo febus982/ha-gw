@@ -1,0 +1,21 @@
+---
+- name: Install dnsmasq
+  apt:
+    name: isc-dhcp-server
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Add configuration file
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/config.j2"
+    dest: /etc/dnsmasq.d/dnsmasq
+  become: yes
+
+- name: Enable and restart consul
+  ansible.builtin.systemd:
+    name: dnsmasq
+    state: restarted
+    enabled: yes
+  become: yes
+...

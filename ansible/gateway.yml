@@ -1,0 +1,39 @@
+---
+- name: Provision gateway
+  hosts: all
+  vars_files:
+    - vars_default/common/defaults.yml
+    - vars_default/vagrant/gateway.yml
+  tasks:
+  # Base network setup
+  - include_role:
+      name: setup_network_interface
+    vars:
+      interface: "{{ external_interface }}"
+      type: "dhcp"
+      # Necessary if type="manual"
+      #address: "{{ external_cidr }}"
+      # Optional, used only if type="manual". Note you can't set this on multiple interfaces
+      #default_gateway: "1.1.1.1"
+  - include_role:
+      name: setup_network_interface
+    vars:
+      interface: "{{ internal_interface }}"
+      address: "{{ internal_cidr }}"
+      type: "manual"
+
+  # Application setup
+  - include_role:
+      name: common_dependencies
+  - include_role:
+      name: consul_node
+  - include_role:
+      name: haproxy23
+  - include_role:
+      name: setup_floating_ips
+    vars:
+      # Setup priority using the last digits of ip address
+      priority: "{{ internal_ip | regex_replace('(?:[0-9]{1,3}\\.){3}([0-9]{1,3})', '\\1' ) }}"
+  - include_role:
+      name: lb_router_iptables
+...

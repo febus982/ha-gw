@@ -1,0 +1,6 @@
+---
+internal_interface: "eth2"
+external_interface: "eth1"
+external_ip: "{{ external_cidr | regex_replace('((?:[0-9]{1,3}\\.){3}[0-9]{1,3})(?:\\/[0-9]{1,2})+', '\\1' ) }}"
+internal_ip: "{{ internal_cidr | regex_replace('((?:[0-9]{1,3}\\.){3}[0-9]{1,3})(?:\\/[0-9]{1,2})+', '\\1' ) }}"
+...

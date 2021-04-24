@@ -1,0 +1,24 @@
+---
+- name: "Config dhcp interface {{ interface }}"
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/dhcp_interface.j2"
+    dest: "/etc/network/interfaces.d/{{ interface }}"
+  become: yes
+  when: type == 'dhcp'
+
+- name: "Config manual interface {{ interface }}"
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/manual_interface.j2"
+    dest: "/etc/network/interfaces.d/{{ interface }}"
+  become: yes
+  when: type == 'manual'
+
+- name: "Start interface {{ interface }}"
+  shell: "ifup {{ interface }}"
+  become: yes
+
+- name: "Start interface {{ interface }}:0"
+  shell: "ifup {{ interface }}:0"
+  become: yes
+  when: secondary_address is defined
+...

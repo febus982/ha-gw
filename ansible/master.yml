@@ -1,0 +1,16 @@
+---
+- name: Provision gateway
+  hosts: all
+  vars_files:
+    - vars_default/common/defaults.yml
+    - vars_default/vagrant/master.yml
+  tasks:
+  - include_role:
+      name: common_dependencies
+  - include_role:
+      name: consul_node
+  - include_role:
+      name: consul_service
+  - include_role:
+      name: nginx
+...

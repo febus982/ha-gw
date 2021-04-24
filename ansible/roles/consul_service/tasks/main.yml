@@ -1,0 +1,14 @@
+---
+- name: Add web service configuration file
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/svc_web.hcl.j2"
+    dest: /etc/consul.d/svc_web.hcl
+  become: yes
+
+- name: Enable and restart consul
+  ansible.builtin.systemd:
+    name: consul
+    state: restarted
+    enabled: yes
+  become: yes
+...

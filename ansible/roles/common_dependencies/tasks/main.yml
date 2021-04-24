@@ -1,0 +1,22 @@
+---
+- name: Install apt dependencies
+  apt:
+    pkg:
+    - curl
+    - dnsutils
+    - gnupg
+    - jq
+    - software-properties-common
+    - unzip
+    - ntp
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Enable and restart ntp
+  ansible.builtin.systemd:
+    name: ntp
+    state: restarted
+    enabled: yes
+  become: yes
+...

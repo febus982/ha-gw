@@ -1,0 +1,25 @@
+frontend stats
+   bind *:1936
+   mode http
+   stats uri /stats
+   stats enable
+   stats refresh 10s
+   no log
+
+frontend http_front
+   bind *:80
+   default_backend http_back
+   
+   # Host-based filtering, use in place of default_backend
+   #acl host_test hdr(host) -i test.services.{{ domain }}
+   #use_backend http_back if host_test
+
+backend http_back
+   #balance roundrobin
+   balance leastconn
+   server-template mywebapp 1-10 _web._tcp.service.{{ domain }} resolvers consul resolve-opts allow-dup-ip resolve-prefer ipv4 check
+
+resolvers consul
+   nameserver consul 127.0.0.1:8600
+   accepted_payload_size 8192
+   hold valid 5s

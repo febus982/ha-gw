@@ -1,0 +1,28 @@
+---
+- name: Enable net.ipv4.ip_nonlocal_bind
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_nonlocal_bind
+    value: '1'
+    state: present
+  become: yes
+
+- name: Install build dependencies
+  apt:
+    name: keepalived
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Add keepalived configuration
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/keepalived.conf.j2"
+    dest: /etc/keepalived/keepalived.conf
+  become: yes
+
+- name: Restart haproxy
+  ansible.builtin.systemd:
+    name: keepalived
+    state: restarted
+    enabled: yes
+  become: yes
+...
