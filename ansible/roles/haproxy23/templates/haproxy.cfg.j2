@@ -17,7 +17,9 @@ frontend http_front
 backend http_back
    #balance roundrobin
    balance leastconn
-   server-template mywebapp 1-10 _web._tcp.service.{{ domain }} resolvers consul resolve-opts allow-dup-ip resolve-prefer ipv4 check
+   # TODO: Re-add the "resolve-opts allow-dup-ip" when discovered why haproxy doesn't identify multiple instances
+   #server-template web 10 internal.web.service.{{ domain }} resolvers consul resolve-prefer ipv4 resolve-net 192.168.100.0/24 check
+   server-template web 10 _web._tcp.service.{{ domain }} resolvers consul resolve-prefer ipv4 resolve-net 192.168.100.0/24 resolve-opts allow-dup-ip check
 
 resolvers consul
    nameserver consul 127.0.0.1:8600

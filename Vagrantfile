@@ -15,38 +15,6 @@
 # NB: Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
-# $dnsmasq = <<-CONF
-# apt-get install -y dnsmasq
-# echo "#/etc/dnsmasq.conf
-# domain-needed
-# bogus-priv
-# expand-hosts
-#
-# # The address 192.168.0.176 is the static IP of this server
-# # You can find this ip by running ifconfig and look for the
-# # IP of the interface which is connected to the router.
-# listen-address=127.0.0.1
-# listen-address=$EXTERNAL_IP
-# bind-interfaces
-#
-# # Use open source DNS servers
-# server=8.8.8.8
-# server=8.8.4.4
-# server=208.67.220.220
-#
-# # Create custom 'domains'.
-# # Custom 'domains' can also be added in /etc/hosts
-# address=/$DOMAIN/$EXTERNAL_IP" > /etc/dnsmasq.conf
-# systemctl restart dnsmasq
-# CONF
-#
-# $nginx = <<NGINX
-# echo "Installing NGINX ..."
-# sudo apt-get update
-# sudo apt-get install -y nginx
-# NGINX
-
-
 LBS = {
   "lb1": {
     "external_cidr": "192.168.50.151/24",
@@ -108,20 +76,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           external_cidr: cidrs[:external_cidr],
           internal_cidr: cidrs[:internal_cidr],
           consul_join_ips: LBS.map{|k,v| "#{v[:internal_cidr][0..(v[:internal_cidr].index("/")-1)]}"},
-          consul_master: "true",
           ansible_python_interpreter:"/usr/bin/python3",
         }
       end
-
-
-      # Dnsmasq
-#       m.vm.provision "shell" do |s|
-#         s.inline = $dnsmasq
-#         s.env = {
-#          "EXTERNAL_IP" => "192.168.50.150",
-#          "DOMAIN" => "services.consul",
-#         }
-#       end
     end
   end
 
@@ -144,10 +101,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       m.vm.provision "ansible" do |ansible|
         ansible.playbook = "ansible/master.yml"
         ansible.extra_vars = {
-          external_cidr: cidrs[:internal_cidr],
+#           external_cidr: cidrs[:internal_cidr],
           internal_cidr: cidrs[:internal_cidr],
           consul_join_ips: LBS.map{|k,v| "#{v[:internal_cidr][0..(v[:internal_cidr].index("/")-1)]}"},
-          consul_master: "false",
           ansible_python_interpreter:"/usr/bin/python3",
         }
       end

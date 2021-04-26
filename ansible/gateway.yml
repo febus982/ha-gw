@@ -35,5 +35,7 @@
       # Setup priority using the last digits of ip address
       priority: "{{ internal_ip | regex_replace('(?:[0-9]{1,3}\\.){3}([0-9]{1,3})', '\\1' ) }}"
   - include_role:
+      name: dnsmasq
+  - include_role:
       name: lb_router_iptables
 ...

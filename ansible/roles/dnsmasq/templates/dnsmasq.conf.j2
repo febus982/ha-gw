@@ -1,0 +1,21 @@
+#/etc/dnsmasq.conf
+domain-needed
+bogus-priv
+expand-hosts
+
+# The address 192.168.0.176 is the static IP of this server
+# You can find this ip by running ifconfig and look for the
+# IP of the interface which is connected to the router.
+listen-address=127.0.0.1
+listen-address={{ external_gateway_ip }}
+bind-interfaces
+
+# Use open source DNS servers
+server=/service.{{ domain }}/127.0.0.1#8600
+server=8.8.8.8
+server=8.8.4.4
+server=208.67.220.220
+
+# Create custom 'domains'.
+# Custom 'domains' can also be added in /etc/hosts
+#address=/$DOMAIN/$EXTERNAL_IP

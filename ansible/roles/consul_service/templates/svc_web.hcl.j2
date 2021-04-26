@@ -1,10 +1,21 @@
-service {
+services {
+  id = "web"
   name = "web",
   port = 80,
-  #address = "{{ external_gateway_ip }}", # This can be reused on different nodes, should be setup to a floating IP
+  #address = "{{ external_gateway_ip }}",
   check {
     args = ["curl", "localhost"],
     interval = "3s"
-  },
-  tags = ["some_tag"]
+  }
 }
+
+#services {
+#  id = "web-internal"
+#  name = "web_internal",
+#  port = 80,
+#  address = "{{ internal_ip }}"
+#  check {
+#    args = ["curl", "localhost"],
+#    interval = "3s"
+#  },
+#}
